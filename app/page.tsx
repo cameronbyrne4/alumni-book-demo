@@ -1,18 +1,18 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { User } from "lucide-react";
+import { User, LayoutGrid, List } from "lucide-react";
 import { Header } from "@/components/Header";
 import { FilterSection } from "@/components/FilterSection";
 import { ProfileCard } from "@/components/ProfileCard";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { LayoutGrid, List } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
   alumniProfiles as initialProfiles, 
   getUniqueCompanies, 
   getUniqueRoles, 
   getUniqueCities,
+  getUniqueChapters,
   graduationYearRange as defaultYearRange
 } from "@/lib/data";
 import { FilterState, AlumniProfile } from "@/types";
@@ -25,6 +25,7 @@ export default function Home() {
     companies: [],
     roles: [],
     cities: [],
+    chapters: [],
     graduationYearRange: defaultYearRange,
     isOpenToContact: false,
   });
@@ -32,6 +33,7 @@ export default function Home() {
   const availableCompanies = useMemo(() => getUniqueCompanies(), []);
   const availableRoles = useMemo(() => getUniqueRoles(), []);
   const availableCities = useMemo(() => getUniqueCities(), []);
+  const availableChapters = useMemo(() => getUniqueChapters(), []);
 
   // Filtering logic
   const filteredProfiles = useMemo(() => {
@@ -54,6 +56,10 @@ export default function Home() {
       }
 
       if (filters.cities.length > 0 && !filters.cities.includes(profile.location)) {
+        return false;
+      }
+
+      if (filters.chapters.length > 0 && !filters.chapters.includes(profile.chapter)) {
         return false;
       }
 
@@ -89,24 +95,31 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#fafafa]">
-      <Header onSearch={handleSearch} />
+      <Header onSearch={handleSearch}>
+        <FilterSection
+          filters={filters}
+          onFilterChange={setFilters}
+          availableCompanies={availableCompanies}
+          availableRoles={availableRoles}
+          availableCities={availableCities}
+          availableChapters={availableChapters}
+          yearRange={defaultYearRange}
+        />
+      </Header>
       
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        {/* Filter Section */}
-        <div className="mb-6 bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-          <FilterSection
-            filters={filters}
-            onFilterChange={setFilters}
-            resultsCount={filteredProfiles.length}
-            availableCompanies={availableCompanies}
-            availableRoles={availableRoles}
-            availableCities={availableCities}
-            yearRange={defaultYearRange}
-          />
-        </div>
+        {/* View Toggle and Results Count */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-bold text-gray-900">
+              {filteredProfiles.length} Results
+            </h2>
+            <div className="h-4 w-px bg-gray-200 mx-2" />
+            <p className="text-sm text-gray-500 font-medium">
+              Alumni matching your search
+            </p>
+          </div>
 
-        {/* View Toggle */}
-        <div className="flex justify-end mb-6">
           <ToggleGroup 
             type="single" 
             value={viewMode} 

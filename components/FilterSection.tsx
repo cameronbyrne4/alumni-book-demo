@@ -25,26 +25,27 @@ import { cn } from "@/lib/utils";
 interface FilterSectionProps {
   filters: FilterState;
   onFilterChange: (filters: FilterState) => void;
-  resultsCount: number;
   availableCompanies: string[];
   availableRoles: string[];
   availableCities: string[];
+  availableChapters: string[];
   yearRange: [number, number];
 }
 
 export function FilterSection({
   filters,
   onFilterChange,
-  resultsCount,
   availableCompanies,
   availableRoles,
   availableCities,
+  availableChapters,
   yearRange,
 }: FilterSectionProps) {
   const hasActiveFilters =
     filters.companies.length > 0 ||
     filters.roles.length > 0 ||
     filters.cities.length > 0 ||
+    filters.chapters.length > 0 ||
     filters.graduationYearRange[0] !== yearRange[0] ||
     filters.graduationYearRange[1] !== yearRange[1] ||
     filters.isOpenToContact;
@@ -54,6 +55,7 @@ export function FilterSection({
       companies: [],
       roles: [],
       cities: [],
+      chapters: [],
       graduationYearRange: yearRange,
       isOpenToContact: false,
     });
@@ -72,85 +74,86 @@ export function FilterSection({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Companies Filter */}
-          <FilterDropdown
-            label="Companies"
-            items={availableCompanies}
-            selectedItems={filters.companies}
-            onToggle={(item) => toggleItem("companies", item)}
-          />
-
-          {/* Roles Filter */}
-          <FilterDropdown
-            label="Roles"
-            items={availableRoles}
-            selectedItems={filters.roles}
-            onToggle={(item) => toggleItem("roles", item)}
-          />
-
-          {/* Cities Filter */}
-          <FilterDropdown
-            label="Cities"
-            items={availableCities}
-            selectedItems={filters.cities}
-            onToggle={(item) => toggleItem("cities", item)}
-          />
-
-          {/* Graduation Year Slider */}
-          <div className="flex flex-col gap-2 min-w-[200px] px-2">
-            <span className="text-xs font-medium text-gray-500">
-              Graduation Year: {filters.graduationYearRange[0]} - {filters.graduationYearRange[1]}
-            </span>
-            <Slider
-              defaultValue={[filters.graduationYearRange[0], filters.graduationYearRange[1]]}
-              max={yearRange[1]}
-              min={yearRange[0]}
-              step={1}
-              value={[filters.graduationYearRange[0], filters.graduationYearRange[1]]}
-              onValueChange={(value) => 
-                onFilterChange({ ...filters, graduationYearRange: value as [number, number] })
-              }
-              className="py-1"
-            />
-          </div>
-
-          {/* Open to Contact Checkbox */}
-          <div className="flex items-center space-x-2 px-2 h-10">
-            <Checkbox 
-              id="open-to-contact" 
-              checked={filters.isOpenToContact}
-              onCheckedChange={(checked) => 
-                onFilterChange({ ...filters, isOpenToContact: !!checked })
-              }
-            />
-            <label
-              htmlFor="open-to-contact"
-              className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-            >
-              Open to Contact
-            </label>
-          </div>
-        </div>
-
-        {/* Results Found & Clear Filters */}
-        <div className="flex items-center gap-4 ml-auto pb-1">
-          <span className="text-sm font-medium text-gray-500">
-            {resultsCount} Results Found
-          </span>
-          {hasActiveFilters && (
-            <button
-              onClick={clearFilters}
-              className="text-sm font-semibold text-[#a60021] hover:underline flex items-center gap-1"
-            >
-              <X className="h-3 w-3" />
-              Clear filters
-            </button>
-          )}
-        </div>
+    <div className="flex flex-wrap items-center gap-4 py-2">
+      {/* 1. Graduation Year Slider (Moved to front for prominence) */}
+      <div className="flex flex-col gap-1 min-w-[160px] px-2">
+        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+          Grad Year: {filters.graduationYearRange[0]} - {filters.graduationYearRange[1]}
+        </span>
+        <Slider
+          defaultValue={[filters.graduationYearRange[0], filters.graduationYearRange[1]]}
+          max={yearRange[1]}
+          min={yearRange[0]}
+          step={1}
+          value={[filters.graduationYearRange[0], filters.graduationYearRange[1]]}
+          onValueChange={(value) => 
+            onFilterChange({ ...filters, graduationYearRange: value as [number, number] })
+          }
+          className="py-1"
+        />
       </div>
+
+      <div className="h-8 w-px bg-gray-100 mx-2" />
+
+      {/* 2. Chapter Filter (New) */}
+      <FilterDropdown
+        label="Chapters"
+        items={availableChapters}
+        selectedItems={filters.chapters}
+        onToggle={(item) => toggleItem("chapters", item)}
+      />
+
+      {/* 3. Cities Filter */}
+      <FilterDropdown
+        label="Cities"
+        items={availableCities}
+        selectedItems={filters.cities}
+        onToggle={(item) => toggleItem("cities", item)}
+      />
+
+      {/* 4. Companies Filter */}
+      <FilterDropdown
+        label="Companies"
+        items={availableCompanies}
+        selectedItems={filters.companies}
+        onToggle={(item) => toggleItem("companies", item)}
+      />
+
+      {/* 5. Roles Filter */}
+      <FilterDropdown
+        label="Roles"
+        items={availableRoles}
+        selectedItems={filters.roles}
+        onToggle={(item) => toggleItem("roles", item)}
+      />
+
+      {/* 6. Open to Contact Checkbox */}
+      <div className="flex items-center space-x-2 px-2 h-9 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors">
+        <Checkbox 
+          id="open-to-contact" 
+          checked={filters.isOpenToContact}
+          onCheckedChange={(checked) => 
+            onFilterChange({ ...filters, isOpenToContact: !!checked })
+          }
+          className="h-4 w-4 data-[state=checked]:bg-[#a60021] data-[state=checked]:border-[#a60021]"
+        />
+        <label
+          htmlFor="open-to-contact"
+          className="text-xs font-semibold text-gray-600 cursor-pointer pr-2"
+        >
+          Open to Contact
+        </label>
+      </div>
+
+      {hasActiveFilters && (
+        <button
+          onClick={clearFilters}
+          className="ml-auto text-xs font-bold text-[#a60021] hover:underline flex items-center gap-1"
+        >
+          <X className="h-3 w-3" />
+          Reset All
+        </button>
+      )}
     </div>
   );
 }

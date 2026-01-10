@@ -22,9 +22,10 @@ import { cn } from "@/lib/utils";
 
 interface HeaderProps {
   onSearch?: (query: string) => void;
+  children?: React.ReactNode;
 }
 
-export function Header({ onSearch }: HeaderProps) {
+export function Header({ onSearch, children }: HeaderProps) {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const [isScrolled, setIsScrolled] = React.useState(false);
@@ -188,6 +189,15 @@ export function Header({ onSearch }: HeaderProps) {
           </button>
         </div>
       </div>
+
+      {/* 2. Sub-header for Filters (LinkedIn Style) */}
+      {children && (
+        <div className="border-t border-gray-100 bg-white/50 backdrop-blur-sm">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            {children}
+          </div>
+        </div>
+      )}
     </header>
   );
 }
