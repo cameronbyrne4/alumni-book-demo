@@ -1,46 +1,69 @@
 import { AlumniProfile, SearchSuggestion } from "@/types";
 
-// Placeholder avatar URLs using UI Avatars service
+// Placeholder avatar URLs using UI Avatars service (Fallback)
 const getAvatarUrl = (name: string) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=200`;
 
-// Placeholder company logo URLs (using logo.clearbit.com for real logos)
+// Ticker icon base URL from nvstly/icons repository
+const TICKER_ICON_BASE = "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/";
+
+const getTickerIcon = (ticker: string) => `${TICKER_ICON_BASE}${ticker.toUpperCase()}.png`;
+
+// Mapping of company names to their logo URLs (Remote or Local)
 const companyLogos: Record<string, string> = {
-  Google: "https://logo.clearbit.com/google.com",
-  Meta: "https://logo.clearbit.com/meta.com",
-  Apple: "https://logo.clearbit.com/apple.com",
-  Amazon: "https://logo.clearbit.com/amazon.com",
-  Microsoft: "https://logo.clearbit.com/microsoft.com",
-  Netflix: "https://logo.clearbit.com/netflix.com",
-  Tesla: "https://logo.clearbit.com/tesla.com",
-  Stripe: "https://logo.clearbit.com/stripe.com",
-  Airbnb: "https://logo.clearbit.com/airbnb.com",
-  Uber: "https://logo.clearbit.com/uber.com",
-  Salesforce: "https://logo.clearbit.com/salesforce.com",
-  Adobe: "https://logo.clearbit.com/adobe.com",
-  LinkedIn: "https://logo.clearbit.com/linkedin.com",
-  Twitter: "https://logo.clearbit.com/twitter.com",
-  Spotify: "https://logo.clearbit.com/spotify.com",
-  Slack: "https://logo.clearbit.com/slack.com",
-  Dropbox: "https://logo.clearbit.com/dropbox.com",
-  Zoom: "https://logo.clearbit.com/zoom.us",
-  Square: "https://logo.clearbit.com/squareup.com",
-  Palantir: "https://logo.clearbit.com/palantir.com",
-  Goldman: "https://logo.clearbit.com/goldmansachs.com",
-  JPMorgan: "https://logo.clearbit.com/jpmorganchase.com",
-  McKinsey: "https://logo.clearbit.com/mckinsey.com",
-  Bain: "https://logo.clearbit.com/bain.com",
-  BCG: "https://logo.clearbit.com/bcg.com",
-  Deloitte: "https://logo.clearbit.com/deloitte.com",
+  Google: getTickerIcon("GOOGL"),
+  Meta: getTickerIcon("META"),
+  Apple: getTickerIcon("AAPL"),
+  Amazon: getTickerIcon("AMZN"),
+  Microsoft: getTickerIcon("MSFT"),
+  Netflix: getTickerIcon("NFLX"),
+  Tesla: getTickerIcon("TSLA"),
+  Airbnb: getTickerIcon("ABNB"),
+  Salesforce: getTickerIcon("CRM"),
+  Adobe: getTickerIcon("ADBE"),
+  LinkedIn: getTickerIcon("MSFT"),
+  Twitter: getTickerIcon("X"),
+  Spotify: getTickerIcon("SPOT"),
+  Slack: getTickerIcon("CRM"),
+  Dropbox: getTickerIcon("DBX"),
+  Zoom: getTickerIcon("ZM"),
+  Square: getTickerIcon("SQ"),
+  Palantir: getTickerIcon("PLTR"),
+  Goldman: getTickerIcon("GS"),
+  "Goldman Sachs": getTickerIcon("GS"),
+  JPMorgan: getTickerIcon("JPM"),
+  "JPMorgan Chase": getTickerIcon("JPM"),
+  Zillow: getTickerIcon("Z"),
+  "Zillow Group": getTickerIcon("Z"),
+  "JHY Ventures, Inc.": "/companies/stripe.png",
+  "Collectors Universe, Inc.": getTickerIcon("CRM"),
+  
+  // Local files
+  Stripe: "/companies/stripe.png",
+  Uber: "/companies/uber.jpg",
+  McKinsey: "/companies/McKinsey.png",
+  "McKinsey & Company": "/companies/McKinsey.png",
+  Bain: "/companies/bain.png",
+  "Bain & Company": "/companies/bain.png",
+  BCG: "/companies/BCG.png",
+  Deloitte: "/companies/deloitte.png",
+  NiftyKit: "/companies/niftykit.webp",
+  Mozilla: "/companies/mozilla.png",
+  "Mozilla Corporation": "/companies/mozilla.png",
+  Adconion: "/companies/adconion.jpg",
+  "Adconion Media Group": "/companies/adconion.jpg",
+  IRONMAN: "/companies/ironman.jpeg",
+  AtBay: "/companies/atbay.webp",
+  "At-Bay": "/companies/atbay.webp",
 };
 
 export const alumniProfiles: AlumniProfile[] = [
   {
     id: "1",
     name: "Terence Pae",
-    profileImage: getAvatarUrl("Terence Pae"),
+    profileImage: "/profiles/terencepae.jpeg",
     currentCompany: "NiftyKit",
-    currentCompanyLogo: "https://logo.clearbit.com/niftykit.com",
+    currentCompanyLogo: companyLogos.NiftyKit,
     currentRole: "Co-Founder",
     location: "Los Angeles, CA",
     graduationYear: 2010,
@@ -51,8 +74,8 @@ export const alumniProfiles: AlumniProfile[] = [
     phone: "(555) 123-4567",
     linkedIn: "https://linkedin.com/in/terencepae",
     companies: [
-      { name: "NiftyKit", logo: "https://logo.clearbit.com/niftykit.com" },
-      { name: "Zillow Group", logo: companyLogos.Airbnb },
+      { name: "NiftyKit", logo: companyLogos.NiftyKit },
+      { name: "Zillow Group", logo: companyLogos.Zillow },
       { name: "Tesla", logo: companyLogos.Tesla },
     ],
     experience: [
@@ -88,9 +111,9 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "2",
     name: "Noel De La Torre",
-    profileImage: getAvatarUrl("Noel De La Torre"),
+    profileImage: "/profiles/2.jpg",
     currentCompany: "Mozilla Corporation",
-    currentCompanyLogo: "https://logo.clearbit.com/mozilla.org",
+    currentCompanyLogo: companyLogos.Mozilla,
     currentRole: "Global Product Marketing Lead",
     location: "LA Metro",
     graduationYear: 2007,
@@ -100,9 +123,9 @@ export const alumniProfiles: AlumniProfile[] = [
     email: "noel.delatorre@email.com",
     linkedIn: "https://linkedin.com/in/noeldelatorre",
     companies: [
-      { name: "Mozilla Corporation", logo: "https://logo.clearbit.com/mozilla.org" },
-      { name: "Adconion Media Group", logo: companyLogos.Adobe },
-      { name: "IRONMAN", logo: companyLogos.Nike },
+      { name: "Mozilla Corporation", logo: companyLogos.Mozilla },
+      { name: "Adconion Media Group", logo: companyLogos.Adconion },
+      { name: "IRONMAN", logo: companyLogos.IRONMAN },
     ],
     experience: [
       {
@@ -130,9 +153,9 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "3",
     name: "Patrick Paahana",
-    profileImage: getAvatarUrl("Patrick Paahana"),
+    profileImage: "/profiles/3.jpg",
     currentCompany: "At-Bay",
-    currentCompanyLogo: "https://logo.clearbit.com/at-bay.com",
+    currentCompanyLogo: companyLogos["At-Bay"],
     currentRole: "Manager, Brand Design",
     location: "San Francisco, CA",
     graduationYear: 2009,
@@ -143,7 +166,7 @@ export const alumniProfiles: AlumniProfile[] = [
     phone: "(555) 234-5678",
     linkedIn: "https://linkedin.com/in/patrickpaahana",
     companies: [
-      { name: "At-Bay", logo: "https://logo.clearbit.com/at-bay.com" },
+      { name: "At-Bay", logo: companyLogos["At-Bay"] },
       { name: "Microsoft", logo: companyLogos.Microsoft },
       { name: "Apple", logo: companyLogos.Apple },
     ],
@@ -179,7 +202,7 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "4",
     name: "Joy Yang",
-    profileImage: getAvatarUrl("Joy Yang"),
+    profileImage: "/profiles/woman1.jpg",
     currentCompany: "JHY Ventures, Inc.",
     currentCompanyLogo: companyLogos.Stripe,
     currentRole: "Co-Founder & Consultant",
@@ -233,7 +256,7 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "5",
     name: "Jacob Morales",
-    profileImage: getAvatarUrl("Jacob Morales"),
+    profileImage: "/profiles/5.jpeg",
     currentCompany: "Collectors Universe, Inc.",
     currentCompanyLogo: companyLogos.Salesforce,
     currentRole: "Technical Recruiter",
@@ -275,7 +298,7 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "6",
     name: "Sarah Chen",
-    profileImage: getAvatarUrl("Sarah Chen"),
+    profileImage: "/profiles/woman2.webp",
     currentCompany: "Google",
     currentCompanyLogo: companyLogos.Google,
     currentRole: "Staff Software Engineer",
@@ -323,14 +346,14 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "7",
     name: "Marcus Johnson",
-    profileImage: getAvatarUrl("Marcus Johnson"),
+    profileImage: "/profiles/7.webp",
     currentCompany: "JPMorgan Chase",
     currentCompanyLogo: companyLogos.JPMorgan,
     currentRole: "Managing Director",
     location: "New York, NY",
     graduationYear: 2008,
     chapter: "Johnson",
-    openToContact: false,
+    openToContact: true,
     bookmarked: false,
     email: "marcus.johnson@email.com",
     companies: [
@@ -363,7 +386,7 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "8",
     name: "Emily Rodriguez",
-    profileImage: getAvatarUrl("Emily Rodriguez"),
+    profileImage: "/profiles/woman3.png",
     currentCompany: "Airbnb",
     currentCompanyLogo: companyLogos.Airbnb,
     currentRole: "Head of Product Design",
@@ -406,7 +429,7 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "9",
     name: "David Kim",
-    profileImage: getAvatarUrl("David Kim"),
+    profileImage: "/profiles/9.webp",
     currentCompany: "Bain & Company",
     currentCompanyLogo: companyLogos.Bain,
     currentRole: "Partner",
@@ -447,7 +470,7 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "10",
     name: "Amanda Foster",
-    profileImage: getAvatarUrl("Amanda Foster"),
+    profileImage: "/profiles/woman4.png",
     currentCompany: "Netflix",
     currentCompanyLogo: companyLogos.Netflix,
     currentRole: "Director of Engineering",
@@ -490,7 +513,7 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "11",
     name: "Ryan Mitchell",
-    profileImage: getAvatarUrl("Ryan Mitchell"),
+    profileImage: "/profiles/1.jpg",
     currentCompany: "Palantir",
     currentCompanyLogo: companyLogos.Palantir,
     currentRole: "Forward Deployed Engineer",
@@ -524,7 +547,7 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "12",
     name: "Jessica Wang",
-    profileImage: getAvatarUrl("Jessica Wang"),
+    profileImage: "/profiles/woman5.jpeg",
     currentCompany: "Spotify",
     currentCompanyLogo: companyLogos.Spotify,
     currentRole: "Product Manager",
@@ -567,14 +590,14 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "13",
     name: "Michael Thompson",
-    profileImage: getAvatarUrl("Michael Thompson"),
+    profileImage: "/profiles/8.png",
     currentCompany: "Deloitte",
     currentCompanyLogo: companyLogos.Deloitte,
     currentRole: "Senior Manager",
     location: "Chicago, IL",
     graduationYear: 2014,
     chapter: "Bruges",
-    openToContact: false,
+    openToContact: true,
     bookmarked: false,
     email: "michael.thompson@email.com",
     companies: [
@@ -600,7 +623,7 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "14",
     name: "Lisa Park",
-    profileImage: getAvatarUrl("Lisa Park"),
+    profileImage: "/profiles/woman6.jpeg",
     currentCompany: "Square",
     currentCompanyLogo: companyLogos.Square,
     currentRole: "VP of Marketing",
@@ -642,7 +665,7 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "15",
     name: "Kevin Nguyen",
-    profileImage: getAvatarUrl("Kevin Nguyen"),
+    profileImage: "/profiles/4.webp",
     currentCompany: "Zoom",
     currentCompanyLogo: companyLogos.Zoom,
     currentRole: "Senior Software Engineer",
@@ -684,7 +707,7 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "16",
     name: "Rachel Green",
-    profileImage: getAvatarUrl("Rachel Green"),
+    profileImage: "/profiles/woman7.webp",
     currentCompany: "Apple",
     currentCompanyLogo: companyLogos.Apple,
     currentRole: "Hardware Engineer",
@@ -718,7 +741,7 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "17",
     name: "Daniel Lee",
-    profileImage: getAvatarUrl("Daniel Lee"),
+    profileImage: "/profiles/6.png",
     currentCompany: "Amazon",
     currentCompanyLogo: companyLogos.Amazon,
     currentRole: "Principal Product Manager",
@@ -761,7 +784,7 @@ export const alumniProfiles: AlumniProfile[] = [
   {
     id: "18",
     name: "Sophia Martinez",
-    profileImage: getAvatarUrl("Sophia Martinez"),
+    profileImage: "/profiles/woman8.webp",
     currentCompany: "Meta",
     currentCompanyLogo: companyLogos.Meta,
     currentRole: "Research Scientist",
