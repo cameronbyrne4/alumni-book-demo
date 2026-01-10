@@ -36,6 +36,7 @@ export interface AlumniProfile {
   email: string;
   phone?: string;
   linkedIn?: string;
+  about?: string; // Optional bio/summary
   // Companies worked at (for the stacked logo display)
   companies: Company[];
   experience: Experience[];

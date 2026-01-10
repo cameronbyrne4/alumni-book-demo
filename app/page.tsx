@@ -5,6 +5,7 @@ import { User, LayoutGrid, List } from "lucide-react";
 import { Header } from "@/components/Header";
 import { FilterSection } from "@/components/FilterSection";
 import { ProfileCard } from "@/components/ProfileCard";
+import { ProfileDetailModal } from "@/components/ProfileDetailModal";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 import { 
@@ -21,6 +22,8 @@ export default function Home() {
   const [profiles, setProfiles] = useState<AlumniProfile[]>(initialProfiles);
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [selectedProfile, setSelectedProfile] = useState<AlumniProfile | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     companies: [],
     roles: [],
@@ -89,8 +92,14 @@ export default function Home() {
   };
 
   const handleProfileClick = (profile: AlumniProfile) => {
-    // Will implement modal in next step
-    console.log("Profile clicked:", profile.name);
+    setSelectedProfile(profile);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    // Don't null the profile immediately to avoid layout shifts during closing animation
+    setTimeout(() => setSelectedProfile(null), 300);
   };
 
   return (
@@ -176,6 +185,12 @@ export default function Home() {
           )}
         </div>
       </main>
+
+      <ProfileDetailModal 
+        profile={selectedProfile}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      />
     </div>
   );
 }
