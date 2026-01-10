@@ -1,0 +1,4 @@
+Note: these are some things I am contemplating but haven't decided on yet.
+1. different hover effect on the cards?
+2. move open to contact to a diff spot
+3. grad year ina  diff spot

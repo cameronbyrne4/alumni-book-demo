@@ -94,7 +94,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="h-screen flex flex-col bg-[#fafafa] overflow-hidden">
       <Header onSearch={handleSearch}>
         <FilterSection
           filters={filters}
@@ -107,8 +107,9 @@ export default function Home() {
         />
       </Header>
       
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        {/* View Toggle and Results Count */}
+      <main className="flex-1 overflow-y-auto custom-scrollbar px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          {/* View Toggle and Results Count */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-bold text-gray-900">
@@ -162,17 +163,18 @@ export default function Home() {
         </div>
 
         {/* Empty State */}
-        {filteredProfiles.length === 0 && (
-          <div className="rounded-xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 text-gray-400">
-              <User className="h-6 w-6" />
+          {filteredProfiles.length === 0 && (
+            <div className="rounded-xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 text-gray-400">
+                <User className="h-6 w-6" />
+              </div>
+              <h3 className="mt-2 text-sm font-semibold text-gray-900">No profiles found</h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Try adjusting your search or filters to find what you&apos;re looking for.
+              </p>
             </div>
-            <h3 className="mt-2 text-sm font-semibold text-gray-900">No profiles found</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Try adjusting your search or filters to find what you&apos;re looking for.
-            </p>
-          </div>
-        )}
+          )}
+        </div>
       </main>
     </div>
   );

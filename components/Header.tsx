@@ -70,6 +70,7 @@ export function Header({ onSearch, children }: HeaderProps) {
               fill
               className="object-contain object-left"
               priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
         </div>
@@ -192,7 +193,7 @@ export function Header({ onSearch, children }: HeaderProps) {
 
       {/* 2. Sub-header for Filters (LinkedIn Style) */}
       {children && (
-        <div className="border-t border-gray-100 bg-white/50 backdrop-blur-sm">
+        <div className="border-t border-b border-gray-100 bg-white/50 backdrop-blur-sm">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             {children}
           </div>
