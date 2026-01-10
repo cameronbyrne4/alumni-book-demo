@@ -47,8 +47,9 @@ export interface FilterState {
   companies: string[];
   roles: string[];
   cities: string[];
+  chapters: string[];
   graduationYearRange: [number, number];
-  hasProfessionalInfo: boolean;
+  isOpenToContact: boolean;
 }
 
 // Search suggestion types

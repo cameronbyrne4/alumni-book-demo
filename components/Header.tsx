@@ -105,7 +105,7 @@ export function Header({ onSearch }: HeaderProps) {
               onOpenAutoFocus={(e) => e.preventDefault()}
             >
               <Command className="rounded-lg">
-                <CommandList>
+                <CommandList className="custom-scrollbar">
                   {recentSearches.length > 0 && (
                     <CommandGroup heading={
                       <div className="flex items-center gap-2 text-xs font-semibold py-1">

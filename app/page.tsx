@@ -1,45 +1,165 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { User } from "lucide-react";
 import { Header } from "@/components/Header";
+import { FilterSection } from "@/components/FilterSection";
+import { ProfileCard } from "@/components/ProfileCard";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { LayoutGrid, List } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { 
+  alumniProfiles as initialProfiles, 
+  getUniqueCompanies, 
+  getUniqueRoles, 
+  getUniqueCities,
+  graduationYearRange as defaultYearRange
+} from "@/lib/data";
+import { FilterState, AlumniProfile } from "@/types";
 
 export default function Home() {
+  const [profiles, setProfiles] = useState<AlumniProfile[]>(initialProfiles);
   const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [filters, setFilters] = useState<FilterState>({
+    companies: [],
+    roles: [],
+    cities: [],
+    graduationYearRange: defaultYearRange,
+    isOpenToContact: false,
+  });
+
+  const availableCompanies = useMemo(() => getUniqueCompanies(), []);
+  const availableRoles = useMemo(() => getUniqueRoles(), []);
+  const availableCities = useMemo(() => getUniqueCities(), []);
+
+  // Filtering logic
+  const filteredProfiles = useMemo(() => {
+    return profiles.filter((profile) => {
+      // Search query filtering
+      const matchesSearch = searchQuery === "" || 
+        profile.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        profile.currentCompany.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        profile.currentRole.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      if (!matchesSearch) return false;
+
+      // Category filtering
+      if (filters.companies.length > 0 && !profile.companies.some(c => filters.companies.includes(c.name))) {
+        return false;
+      }
+      
+      if (filters.roles.length > 0 && !filters.roles.includes(profile.currentRole)) {
+        return false;
+      }
+
+      if (filters.cities.length > 0 && !filters.cities.includes(profile.location)) {
+        return false;
+      }
+
+      // Graduation Year filtering
+      if (profile.graduationYear < filters.graduationYearRange[0] || 
+          profile.graduationYear > filters.graduationYearRange[1]) {
+        return false;
+      }
+
+      // Open to Contact filtering
+      if (filters.isOpenToContact && !profile.openToContact) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [searchQuery, filters, profiles]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    // Will be used for filtering profiles
+  };
+
+  const toggleBookmark = (id: string) => {
+    setProfiles(prev => prev.map(p => 
+      p.id === id ? { ...p, bookmarked: !p.bookmarked } : p
+    ));
+  };
+
+  const handleProfileClick = (profile: AlumniProfile) => {
+    // Will implement modal in next step
+    console.log("Profile clicked:", profile.name);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#fafafa]">
       <Header onSearch={handleSearch} />
       
-      {/* Main content area */}
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        {/* Page title */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-            Alumni Network
-          </h1>
-          <p className="mt-1 text-sm text-gray-600">
-            Connecting professionals across industries
-          </p>
+        {/* Filter Section */}
+        <div className="mb-6 bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+          <FilterSection
+            filters={filters}
+            onFilterChange={setFilters}
+            resultsCount={filteredProfiles.length}
+            availableCompanies={availableCompanies}
+            availableRoles={availableRoles}
+            availableCities={availableCities}
+            yearRange={defaultYearRange}
+          />
         </div>
 
-        {/* Show current search if any */}
-        {searchQuery && (
-          <div className="mb-4 text-sm text-gray-600">
-            Showing results for: <span className="font-medium text-gray-900">&ldquo;{searchQuery}&rdquo;</span>
+        {/* View Toggle */}
+        <div className="flex justify-end mb-6">
+          <ToggleGroup 
+            type="single" 
+            value={viewMode} 
+            onValueChange={(value) => value && setViewMode(value as "grid" | "list")}
+            className="bg-white border border-gray-200 rounded-lg p-1 shadow-sm"
+          >
+            <ToggleGroupItem 
+              value="grid" 
+              aria-label="Grid View"
+              className="data-[state=on]:bg-[#a60021]/5 data-[state=on]:text-[#a60021]"
+            >
+              <LayoutGrid className="h-4 w-4" />
+            </ToggleGroupItem>
+            <ToggleGroupItem 
+              value="list" 
+              aria-label="List View"
+              className="data-[state=on]:bg-[#a60021]/5 data-[state=on]:text-[#a60021]"
+            >
+              <List className="h-4 w-4" />
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
+
+        {/* Profiles Grid/List */}
+        <div className={cn(
+          "grid gap-6",
+          viewMode === "grid" 
+            ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
+            : "grid-cols-1"
+        )}>
+          {filteredProfiles.map((profile) => (
+            <ProfileCard
+              key={profile.id}
+              profile={profile}
+              viewMode={viewMode}
+              onBookmarkToggle={toggleBookmark}
+              onClick={handleProfileClick}
+            />
+          ))}
+        </div>
+
+        {/* Empty State */}
+        {filteredProfiles.length === 0 && (
+          <div className="rounded-xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 text-gray-400">
+              <User className="h-6 w-6" />
+            </div>
+            <h3 className="mt-2 text-sm font-semibold text-gray-900">No profiles found</h3>
+            <p className="mt-1 text-sm text-gray-500">
+              Try adjusting your search or filters to find what you&apos;re looking for.
+            </p>
           </div>
         )}
-
-        {/* Placeholder for filters and profile cards */}
-        <div className="rounded-lg border border-dashed border-gray-300 bg-white p-12 text-center">
-          <p className="text-gray-500">
-            Filters and profile cards will be added here
-          </p>
-        </div>
       </main>
     </div>
   );
