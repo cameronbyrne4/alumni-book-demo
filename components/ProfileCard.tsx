@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/tooltip";
 import { AlumniProfile } from "@/types";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface ProfileCardProps {
   profile: AlumniProfile;
@@ -42,6 +43,14 @@ export function ProfileCard({ profile, viewMode = "grid", onBookmarkToggle, onCl
       setIsOverflowing(titleRef.current.scrollWidth > titleRef.current.clientWidth);
     }
   }, [profile.currentRole, profile.currentCompany, viewMode]);
+
+  const handleEmailClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toast.info(`Opening email client to contact ${profile.name}...`, {
+      duration: 2000,
+    });
+    window.open(`mailto:${profile.email}`);
+  };
 
   if (isList) {
     return (
@@ -125,7 +134,7 @@ export function ProfileCard({ profile, viewMode = "grid", onBookmarkToggle, onCl
           </div>
 
           <div className="flex items-center gap-1 pl-4 border-l border-gray-50 min-w-[100px] justify-end">
-            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-gray-400 hover:text-[#a60021]" onClick={(e) => { e.stopPropagation(); window.open(`mailto:${profile.email}`) }}>
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-gray-400 hover:text-[#a60021]" onClick={handleEmailClick}>
               <Mail className="h-4 w-4" />
             </Button>
             {profile.linkedIn && (
@@ -261,7 +270,7 @@ export function ProfileCard({ profile, viewMode = "grid", onBookmarkToggle, onCl
               variant="ghost" 
               size="icon" 
               className="h-7 w-7 rounded-full text-gray-400 hover:text-[#a60021] hover:bg-[#a60021]/5"
-              onClick={(e) => { e.stopPropagation(); window.open(`mailto:${profile.email}`) }}
+              onClick={handleEmailClick}
             >
               <Mail className="h-4 w-4" />
             </Button>

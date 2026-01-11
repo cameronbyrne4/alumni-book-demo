@@ -8,7 +8,8 @@ import {
   Linkedin, 
   MapPin,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  UserPlus
 } from "lucide-react";
 import {
   Dialog,
@@ -20,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { AlumniProfile } from "@/types";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface ProfileDetailModalProps {
   profile: AlumniProfile | null;
@@ -61,6 +63,19 @@ function CollapsibleSection({ title, defaultOpen = true, children }: Collapsible
 export function ProfileDetailModal({ profile, isOpen, onClose }: ProfileDetailModalProps) {
   if (!profile) return null;
 
+  const handleConnect = () => {
+    toast.success(`Connection request sent to ${profile.name}`, {
+      description: "They will be notified of your interest.",
+      duration: 3000,
+    });
+  };
+
+  const handleEmailClick = (e: React.MouseEvent) => {
+    toast.info(`Opening email client to contact ${profile.name}...`, {
+      duration: 2000,
+    });
+  };
+
   // Get company logo from the companies array or generate a fallback
   const getCompanyLogo = (companyName: string) => {
     const company = profile.companies.find(c => c.name === companyName);
@@ -73,7 +88,7 @@ export function ProfileDetailModal({ profile, isOpen, onClose }: ProfileDetailMo
       <DialogContent className="max-w-lg max-h-[85vh] overflow-hidden p-0 border border-gray-200 bg-white gap-0 rounded-xl shadow-2xl">
         <div className="flex flex-col h-full max-h-[85vh]">
           {/* Header - Fixed */}
-          <div className="p-6 pb-4 bg-white relative shrink-0">
+          <div className="p-6 pb-4 bg-white relative shrink-0 pr-12">
             <div className="flex items-start gap-5">
               {/* Avatar */}
               <Avatar className="h-20 w-20 border-2 border-gray-100 shadow-sm">
@@ -85,18 +100,26 @@ export function ProfileDetailModal({ profile, isOpen, onClose }: ProfileDetailMo
               
               {/* Name & Title */}
               <div className="flex-1 min-w-0 pt-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-2xl font-bold text-gray-900">{profile.name}</h2>
-                </div>
+                <h2 className="text-2xl font-bold text-gray-900">{profile.name}</h2>
                 <p className="text-gray-600 font-semibold text-base mt-1">
                   {profile.currentRole} <span className="text-gray-400 font-normal mx-1">@</span> {profile.currentCompany}
                 </p>
-                <div className="flex items-center gap-2 mt-2">
-                  {profile.openToContact && (
-                    <Badge className="bg-green-50 text-green-700 border-none font-bold uppercase text-[10px] tracking-wider px-2 py-0.5">
-                      Open to Contact
-                    </Badge>
-                  )}
+                <div className="flex items-center gap-3 mt-3">
+                  <Button 
+                    onClick={handleConnect}
+                    className="bg-[#a60021] hover:bg-[#8a001a] text-white font-bold h-8 px-4 text-xs rounded-full shadow-sm transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5"
+                  >
+                    <UserPlus className="h-3.5 w-3.5" />
+                    Connect
+                  </Button>
+                  <div className="flex items-center gap-2">
+                    
+                    {profile.openToContact && (
+                      <Badge className="bg-green-50 text-green-700 border-none font-bold uppercase text-[10px] tracking-wider px-2 py-0.5">
+                        Open to Contact
+                      </Badge>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -111,6 +134,7 @@ export function ProfileDetailModal({ profile, isOpen, onClose }: ProfileDetailMo
               {/* Email */}
               <a 
                 href={`mailto:${profile.email}`}
+                onClick={handleEmailClick}
                 className="flex items-center gap-3 text-gray-600 hover:text-[#a60021] transition-colors group"
               >
                 <Mail className="h-4 w-4 text-gray-400 group-hover:text-[#a60021] transition-colors" />
