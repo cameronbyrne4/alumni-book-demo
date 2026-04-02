@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Search, Bell, Mail, User, History, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { Search, Bell, Mail, User, History, Sparkles, Settings } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import {
@@ -174,20 +175,41 @@ export function Header({ onSearch, children }: HeaderProps) {
             <span className="sr-only">Notifications</span>
           </button>
 
-          {/* Profile Avatar */}
+          {/* Profile Avatar — menu includes Settings */}
           <div className="h-8 w-px bg-gray-200 mx-1 hidden sm:block" />
-          
-          <button
-            className="flex items-center gap-2 rounded-full p-0.5 pr-2 hover:bg-gray-100 transition-all border border-transparent hover:border-gray-200"
-            aria-label="User account"
-          >
-            <Avatar className="h-8 w-8 ring-1 ring-gray-100">
-              <AvatarFallback className="bg-gray-100 text-[#a60021] text-xs font-bold">
-                <User className="h-4 w-4" />
-              </AvatarFallback>
-            </Avatar>
-            <span className="hidden md:block text-xs font-medium text-gray-700">Me</span>
-          </button>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                className="flex items-center gap-2 rounded-full p-0.5 pr-2 hover:bg-gray-100 transition-all border border-transparent hover:border-gray-200 outline-none focus-visible:ring-2 focus-visible:ring-[#a60021]/30 focus-visible:ring-offset-2"
+                aria-label="Account menu"
+                aria-haspopup="dialog"
+              >
+                <Avatar className="h-8 w-8 ring-1 ring-gray-100">
+                  <AvatarFallback className="bg-gray-100 text-[#a60021] text-xs font-bold">
+                    <User className="h-4 w-4" />
+                  </AvatarFallback>
+                </Avatar>
+                <span className="hidden md:block text-xs font-medium text-gray-700">Me</span>
+              </button>
+            </PopoverTrigger>
+            <PopoverContent
+              align="end"
+              sideOffset={8}
+              className="w-56 p-1 border-gray-200 shadow-lg"
+            >
+              <nav aria-label="Account">
+                <Link
+                  href="/settings"
+                  className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm text-gray-700 transition-colors hover:bg-gray-50 hover:text-[#a60021]"
+                >
+                  <Settings className="h-4 w-4 shrink-0 text-gray-500" aria-hidden />
+                  Settings
+                </Link>
+              </nav>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
