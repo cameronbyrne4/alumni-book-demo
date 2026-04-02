@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { User, LayoutGrid, List } from "lucide-react";
+import Link from "next/link";
+import { User, LayoutGrid, List, LogIn } from "lucide-react";
 import { Header } from "@/components/Header";
 import { FilterSection } from "@/components/FilterSection";
 import { ProfileCard } from "@/components/ProfileCard";
@@ -191,6 +192,16 @@ export default function Home() {
         isOpen={isModalOpen}
         onClose={closeModal}
       />
+
+      {/* Demo-only: jump to FSID sign-in UI; remove or gate behind env when auth is real */}
+      <Link
+        href="/sign-in"
+        className="fixed bottom-4 right-4 z-50 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-600 shadow-sm transition-colors hover:border-[#a6002133] hover:bg-[#a6002108] hover:text-[#a60021]"
+        aria-label="Open sign-in screen (demo)"
+      >
+        <LogIn className="h-3.5 w-3.5" aria-hidden />
+        Dev: Sign in
+      </Link>
     </div>
   );
 }
